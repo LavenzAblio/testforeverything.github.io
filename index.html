@@ -1,0 +1,112 @@
+<!-- index.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sentence Shuffler</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #eef2f3, #d4d9dd);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      width: 90%;
+      max-width: 600px;
+    }
+    h1 {
+      text-align: center;
+      color: #333333;
+      margin-bottom: 20px;
+    }
+    textarea {
+      width: 100%;
+      font-size: 16px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      resize: vertical;
+    }
+    button {
+      margin-top: 15px;
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      background-color: #0077cc;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #005fa3;
+    }
+    #output {
+      margin-top: 20px;
+      background-color: #f9f9f9;
+      padding: 12px;
+      border-radius: 8px;
+      white-space: pre-wrap;
+      font-family: 'Courier New', monospace;
+      font-size: 15px;
+      color: #222;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Sentence Shuffler</h1>
+    <textarea id="input" rows="4" placeholder="Enter your sentence here..."></textarea>
+    <button onclick="shuffleSentence()">Shuffle</button>
+    <div id="output"></div>
+  </div>
+
+  <script>
+    function isArticle(word) {
+      return ["a", "an", "the"].includes(word);
+    }
+
+    function cleanPunctuation(text) {
+      return text
+        .replace(/[.,'";:!?()\[\]\-]/g, "")  // remove punctuation
+        .toLowerCase();                      // convert to lowercase
+    }
+
+    function shuffleSentence() {
+      const input = document.getElementById("input").value;
+      const cleaned = cleanPunctuation(input);
+      const words = cleaned.trim().split(/\s+/);
+      const tokens = [];
+
+      for (let i = 0; i < words.length; ++i) {
+        if (isArticle(words[i]) && i + 1 < words.length) {
+          tokens.push(words[i] + " " + words[i + 1]);
+          i++;
+        } else {
+          tokens.push(words[i]);
+        }
+      }
+
+      for (let i = tokens.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [tokens[i], tokens[j]] = [tokens[j], tokens[i]];
+      }
+
+      const result = " / " + tokens.join(" / ") + " / ";
+      document.getElementById("output").textContent = result;
+    }
+  </script>
+</body>
+</html>
